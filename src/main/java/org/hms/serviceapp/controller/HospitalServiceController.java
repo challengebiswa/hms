@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,30 +21,62 @@ public class HospitalServiceController {
 	@Autowired
 	private SpecialistService specialistService;
 
+	/**
+	 * Check hospitalName and specialistType then get the result
+	 * @param hospitalName
+	 * @param specialistType
+	 * @return SpecialistDetails
+	 * @throws ResourceNotFoundException
+	 */
 	@GetMapping("/specialistDetails")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public ResponseEntity<SpecialistDetails> getSpecialistDetails(String hospitalName, String specialistType)
+	public ResponseEntity<SpecialistDetails> getSpecialistDetails(@RequestParam("hospitalName") String hospitalName, @RequestParam("specialistType") String specialistType)
 			throws ResourceNotFoundException {
+
 		try {
-			return ResponseEntity.ok().body(specialistService.getSpecialistDetails(hospitalName, specialistType));
+			SpecialistDetails specialistDetails = specialistService.getSpecialistDetails(hospitalName, specialistType);
+			return ResponseEntity.ok().body(specialistDetails);
 		} catch (ResourceNotFoundException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Check specialistName,appointmentDay then get the AppointmentDetails details
+	 * @param specialistName
+	 * @param appointmentDay
+	 * @param patientName
+	 * @return AppointmentDetails
+	 * @throws ResourceNotFoundException
+	 */
+	@GetMapping("/appointmentDetails")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public ResponseEntity<AppointmentDetails> getAppoinmentDetails(@RequestParam("specialistName") String specialistName, @RequestParam("appointmentDay") String appointmentDay,
+			@RequestParam("patientName") String patientName) throws ResourceNotFoundException {
+		try {
 			return ResponseEntity.badRequest()
-					.body(specialistService.getSpecialistDetails(hospitalName, specialistType));
+					.body(specialistService.getAppointment(specialistName, appointmentDay, patientName));
+		} catch (ResourceNotFoundException e) {
+			throw e;
 		}
 
 	}
-
-	@GetMapping("/appointmentDetails")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public ResponseEntity<AppointmentDetails> getAppoinmentDetails(String specialistName, String appointmentDay,
-			String patientName) throws ResourceNotFoundException {
-		return ResponseEntity.badRequest()
-				.body(specialistService.getAppointment(specialistName, appointmentDay, patientName));
-	}
+	
+	/**
+	 * Check hospital details and return no of beds available
+	 * @param hospitalName
+	 * @return String
+	 * @throws ResourceNotFoundException
+	 */
 
 	@GetMapping("/bedDetails")
-	public ResponseEntity<String> getBedDetails(String hospitalName) throws ResourceNotFoundException {
-		return ResponseEntity.badRequest().body(specialistService.getBedDetails(hospitalName));
+	public ResponseEntity<String> getBedDetails(@RequestParam("hospitalName") String hospitalName) throws ResourceNotFoundException {
+		try {
+			return ResponseEntity.badRequest().body(specialistService.getBedDetails(hospitalName));
+		} catch (ResourceNotFoundException e) {
+			throw e;
+		}
+
 	}
 
 }

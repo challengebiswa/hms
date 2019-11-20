@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @PropertySource("classpath:specialist.properties")
@@ -14,13 +13,11 @@ import org.springframework.stereotype.Component;
 public class SpecialistDtls {
 
 	private List<SpecialistInformation> specialistInformation=new ArrayList<>();
-
 	
 	public List<SpecialistInformation> getSpecialistInformation() {
 		return specialistInformation;
 	}
-
-
+	
 	public void setSpecialistInformation(List<SpecialistInformation> specialistInformation) {
 		this.specialistInformation = specialistInformation;
 	}

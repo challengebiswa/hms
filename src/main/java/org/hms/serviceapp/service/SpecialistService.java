@@ -43,6 +43,15 @@ public class SpecialistService {
 
 	@Autowired
 	AppointmentDetails appointmentDetails;
+	
+	public SpecialistService() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public SpecialistService(SpecialistDtls specialistDtls) {
+		// TODO Auto-generated constructor stub
+		this.specialistDtls=specialistDtls;
+	}
 
 	@Cacheable("specialistDetails")
 	public SpecialistDetails getSpecialistDetails(String hospitalName, String specialistType)
@@ -76,8 +85,10 @@ public class SpecialistService {
 	public AppointmentDetails getAppointment(String specilist, String appointmentDay, String patientName)
 			throws ResourceNotFoundException {
 		List<SpecialistInformation> specialistNameList = specialistDtls.getSpecialistInformation();
+		Integer counter = 0;
 		for (SpecialistInformation specialistInformation : specialistNameList) {
 			if (specialistInformation.getName().equalsIgnoreCase(specilist)) {
+				counter++;
 				String day[] = specialistInformation.getDay().split("[,]");
 				if (Arrays.stream(day).anyMatch(appointmentDay::equalsIgnoreCase)) {
 					appointmentDetails.setAppointmentDay(appointmentDay);
@@ -87,9 +98,9 @@ public class SpecialistService {
 				appointmentDetails.setAppointmentTime(specialistInformation.getTime());
 				appointmentDetails.setSpecialistName(specialistInformation.getName());
 				appointmentDetails.setPatientName(patientName);
-			} else {
+			} 
+			if (counter == 0)
 				throw new ResourceNotFoundException(CmnConst.SPECIALIST_NOT_FOUND);
-			}
 		}
 		return appointmentDetails;
 	}

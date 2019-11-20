@@ -54,7 +54,7 @@ public class HospitalServiceController {
 	public ResponseEntity<AppointmentDetails> getAppoinmentDetails(@RequestParam("specialistName") String specialistName, @RequestParam("appointmentDay") String appointmentDay,
 			@RequestParam("patientName") String patientName) throws ResourceNotFoundException {
 		try {
-			return ResponseEntity.badRequest()
+			return ResponseEntity.ok()
 					.body(specialistService.getAppointment(specialistName, appointmentDay, patientName));
 		} catch (ResourceNotFoundException e) {
 			throw e;

@@ -29,7 +29,7 @@ public class RestClient {
 
 	public static ResponseEntity<String> restTest(String port, String env, String type, String hospitalName,
 			String specialist) {
-		final String uri = "http://" + env + "?hospitalName" + hospitalName + "&specialistType=" + specialist;
+		final String uri = "http://" + env + "?hospitalName=" + hospitalName + "&specialistType=" + specialist;
 
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
